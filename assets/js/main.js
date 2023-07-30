@@ -1,6 +1,8 @@
 const pokemonList = document.getElementById("pokemonList");
 const loadMoreButton = document.getElementById("loadMoreButton");
 const loadingScreen = document.getElementById("loadingScreen");
+const pokemonModal = document.getElementById("pokemonModal");
+const closeButton = document.querySelector(".close-button");
 
 const maxRecords = 500;
 const limit = 10;
@@ -60,5 +62,55 @@ loadMoreButton.addEventListener("click", () => {
     loadPokemonItens(offset, limit)
       .then(() => {})
       .finally(() => hideLoadingScreen());
+  }
+});
+
+function showPokemonModal(pokemon) {
+  modalDetails.innerHTML = `
+      <h2>${pokemon.name}</h2>
+      <img src="${pokemon.photo}" alt="${pokemon.name}">
+      <p>Number: #${pokemon.number}</p>
+      <p>Type: ${pokemon.types.join(", ")}</p>
+    `;
+
+  pokemonModal.style.display = "block";
+}
+
+function hidePokemonModal() {
+  pokemonModal.style.display = "none";
+}
+
+pokemonList.addEventListener("click", (event) => {
+  const clickedPokemon = event.target.closest(".pokemon");
+  if (clickedPokemon) {
+    const number = clickedPokemon.querySelector(".number").textContent.slice(1);
+    const name = clickedPokemon.querySelector(".name").textContent;
+    const photo = clickedPokemon.querySelector("img").getAttribute("src");
+    const types = Array.from(clickedPokemon.querySelectorAll(".type")).map(
+      (type) => type.textContent
+    );
+
+    const pokemon = {
+      number,
+      name,
+      photo,
+      types,
+    };
+
+    showPokemonModal(pokemon);
+  }
+});
+
+closeButton.addEventListener("click", hidePokemonModal);
+
+window.addEventListener("click", (event) => {
+  if (event.target === pokemonModal) {
+    hidePokemonModal();
+  }
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    hidePokemonModal();
   }
 });
