@@ -101,6 +101,7 @@
   text-transform: capitalize;
   color: #fff;
   margin-bottom: 0.25rem;
+  cursor: pointer;
 }
 
 .pokemon .detail {
